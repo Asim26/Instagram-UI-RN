@@ -1,12 +1,39 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StatusBar, StyleSheet, ScrollView} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import Stories from '../screenComponents/Stories';
 
 // create a component
 const Home = () => {
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
+    <View
+      style={{
+        marginVertical: 40,
+        height: '100%',
+      }}>
+      <StatusBar
+        backgroundColor="white"
+        barStyle="dark-content"
+        animated={true}
+      />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 15,
+        }}>
+        <FontAwesome name="plus-square-o" style={{fontSize: 24}} />
+        <Text style={{fontSize: 25, fontWeight: '500'}}>Instagram</Text>
+        <Feather name="navigation" style={{fontSize: 24}} />
+      </View>
+
+      <ScrollView>
+        <Stories />
+      </ScrollView>
     </View>
   );
 };
