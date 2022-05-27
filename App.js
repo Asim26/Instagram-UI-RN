@@ -9,6 +9,7 @@ import Activity from './src/components/screens/Activity';
 import Profile from './src/components/screens/Profile';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import RoutesTitle from './src/routes/screenTitle';
+import Status from './src/components/screenComponents/Status';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -68,6 +69,7 @@ const App = () => {
           name={RoutesTitle.BottomTabs}
           component={BottomTabScreen}
         />
+        <Stack.Screen name={RoutesTitle.Status} component={Status} />
       </Stack.Navigator>
     </NavigationContainer>
   );
