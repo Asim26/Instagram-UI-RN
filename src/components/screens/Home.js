@@ -4,6 +4,7 @@ import {View, Text, StatusBar, StyleSheet, ScrollView} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import Stories from '../screenComponents/Stories';
+import Post from '../screenComponents/Post';
 
 // create a component
 const Home = () => {
@@ -33,6 +34,7 @@ const Home = () => {
 
       <ScrollView>
         <Stories />
+        <Post />
       </ScrollView>
     </View>
   );
