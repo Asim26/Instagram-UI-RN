@@ -7,13 +7,43 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Pressable,
+  Animated,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
+import {openCamera, openGallery} from '../../services/HelperService';
+import RNFetchBlob from 'rn-fetch-blob';
 
 // create a component
 const Stories = () => {
   const navigation = useNavigation();
+
+  const [profileStatus, setProfileStatus] = React.useState(false);
+
+  const [image, setImage] = React.useState('');
+  const [profilePic, setProfilePic] = React.useState(null);
+
+  const launchGallery = () => {
+    openGallery(false, response => {
+      console.log('response ====gallery=>>>>', response);
+      if (response) {
+        let uri = response.assets[0];
+        const path =
+          Platform.OS === 'ios' ? uri.uri.replace('file:///', '') : uri.uri;
+        let imageData = {
+          name: uri.fileName,
+          filename: uri.fileName,
+          type: uri.type,
+          data: RNFetchBlob.wrap(decodeURIComponent(path)),
+        };
+
+        setImage(imageData);
+        setProfilePic(uri.uri);
+        setProfileStatus(true);
+      }
+    });
+  };
 
   const storyInfo = [
     {
@@ -42,6 +72,7 @@ const Stories = () => {
       image: require('../../storage/images/post1.jpeg'),
     },
   ];
+
   return (
     <ScrollView
       horizontal={true}
@@ -49,12 +80,14 @@ const Stories = () => {
       style={{paddingVertical: 20}}>
       {storyInfo.map((data, index) => {
         return (
-          <TouchableOpacity
+          <Pressable
             key={index}
             onPress={() =>
               navigation.push('Status', {
                 name: data.name,
                 image: data.image,
+                profileStatus: profileStatus,
+                profileStatusImg: profilePic,
               })
             }>
             <View
@@ -81,27 +114,87 @@ const Stories = () => {
                   />
                 </View>
               ) : null}
-              <View
-                style={{
-                  width: 68,
-                  height: 68,
-                  backgroundColor: 'white',
-                  borderWidth: 1.8,
-                  borderRadius: 34,
-                  borderColor: '#c13584',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={data.image}
+              {data.id == 1 ? (
+                <View>
+                  {profilePic ? (
+                    <>
+                      <View
+                        style={{
+                          width: 68,
+                          height: 68,
+                          backgroundColor: 'white',
+                          borderWidth: 1.8,
+                          borderRadius: 34,
+                          borderColor: '#c13584',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Image
+                          source={{uri: profilePic}}
+                          style={{
+                            resizeMode: 'cover',
+                            width: '92%',
+                            height: '92%',
+                            borderRadius: 46,
+                          }}
+                        />
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      <Pressable
+                        onPress={() => {
+                          launchGallery();
+                        }}>
+                        <View
+                          style={{
+                            width: 68,
+                            height: 68,
+                            backgroundColor: 'white',
+                            borderWidth: 1.8,
+                            borderRadius: 34,
+                            borderColor: '#c13584',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={require('../../storage/images/userImage.png')}
+                            style={{
+                              resizeMode: 'cover',
+                              width: '92%',
+                              height: '92%',
+                              borderRadius: 46,
+                            }}
+                          />
+                        </View>
+                      </Pressable>
+                    </>
+                  )}
+                </View>
+              ) : (
+                <View
                   style={{
-                    resizeMode: 'cover',
-                    width: '92%',
-                    height: '92%',
-                    borderRadius: 46,
-                  }}
-                />
-              </View>
+                    width: 68,
+                    height: 68,
+                    backgroundColor: 'white',
+                    borderWidth: 1.8,
+                    borderRadius: 34,
+                    borderColor: '#c13584',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={data.image}
+                    style={{
+                      resizeMode: 'cover',
+                      width: '92%',
+                      height: '92%',
+                      borderRadius: 46,
+                    }}
+                  />
+                </View>
+              )}
+
               <Text
                 style={{
                   textAlign: 'center',
@@ -111,7 +204,7 @@ const Stories = () => {
                 {data.name}
               </Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         );
       })}
     </ScrollView>
